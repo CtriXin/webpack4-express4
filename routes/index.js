@@ -13,7 +13,6 @@ router.get('/', myLogger, function (req, res, next) {
   res.render('index', {
     // title: req.t('lang'), //可以直接获取多语言的title
     title: '首页',
-    test: '/dist/images'
   });
 });
 
