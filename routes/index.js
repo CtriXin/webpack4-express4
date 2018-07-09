@@ -11,7 +11,7 @@ var myLogger = function (req, res, next) {
 router.get('/', myLogger, function (req, res, next) {
   console.log('用戶端語系：' + req.acceptsLanguages()[0], req.language);
   res.render('index', {
-    // title: req.t('lang'),
+    // title: req.t('lang'), //可以直接获取多语言的title
     title: '首页',
     test: '/dist/images'
   });
