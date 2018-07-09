@@ -53,7 +53,7 @@ app.use(morgan(function (tokens, req, res) {
     tokens.date(req, res),
   ].join(' ')
 }));
-//中间件
+//中间件 -- 图片地址处理备用
 // var middleware = {
 //   globalLocals: function (req, res, next) {
 //     if (app.get('env') === 'product') {
