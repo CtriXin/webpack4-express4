@@ -86,10 +86,7 @@ module.exports = {
 			loaders: ['babel-loader?cacheDirectory=true'],
 			threadPool: happyThreadPool
 		}),
-		// 消除冗余的css代码,如果页面中没用到此样式则不输出
-		new purifyCssWebpack({
-			paths: glob.sync(path.join(__dirname, "../src/pages/*.html"))
-		}),
+		
 		new ModuleConcatenationPlugin(),
 		new MiniCssExtractPlugin({
 			// Options similar to the same options in webpackOptions.output
@@ -105,6 +102,10 @@ module.exports = {
 			// dry Use boolean "true" to test/emulate delete. (will not remove files).
 			// Default: false - remove files
 			dry: false,
+		}),
+		// 消除冗余的css代码,如果页面中没用到此样式则不输出
+		new purifyCssWebpack({
+			paths: glob.sync(path.join(__dirname, "../views/**/*.html"))
 		}),
 		new ProgressBarPlugin({
 			format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)'
