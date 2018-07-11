@@ -141,7 +141,6 @@ var htmlArray = [];
 let arr = glob.sync(resolve('src/entry/**/*.js'));
 arr.forEach(function (file) {
 	let [filename, entry, module] = folderFile(file);
-	// console.log(filename,entry,module);
 	let obj = {};
 	if (module == 'entry') {
 		obj._html = entry;
@@ -161,28 +160,6 @@ htmlArray.forEach((element) => {
 
 
 
-//遍历入口
-function getEntries() {
-	let entries = {};
-	let arr = glob.sync(resolve('src/entry/**/*.js'));
-	arr.forEach(function (file) {
-		let [filename, entry, module] = folderFile(file), //文件名，文件名（去后缀），入口
-			path = file.substring(file.indexOf('src')); //路径
-
-		// console.log(path, entry, filename, module);
-		if (module == 'entry') {
-			entries[entry] = entries[entry] || [];
-			entries[entry].push('./' + path);
-
-		} else {
-			entries[module + '_' + entry] = entries[module + '_' + entry] || [];
-			entries[module + '_' + entry].push('./' + path);
-
-		}
-	})
-	// console.log(entries);
-	return entries;
-}
 
 
 
