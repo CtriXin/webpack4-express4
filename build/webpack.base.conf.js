@@ -55,9 +55,7 @@ module.exports = {
 		// 'jquery': 'window.jQuery'
 	},
 	resolve: {
-		alias: {
-			'vue': 'vue/dist/vue.js'
-		},
+		
 		mainFields: ['jsnext:main', 'browser', 'main']
 	},
 	plugins: [
