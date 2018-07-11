@@ -22,8 +22,7 @@ const cleanWebpackPlugin = require("clean-webpack-plugin");
 const copyWebpackPlugin = require("copy-webpack-plugin");
 const rules = require("./webpack.rules.conf.js");
 //限时进度
-const chalk = require('chalk');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+
 // vue
 const { VueLoaderPlugin } = require('vue-loader');
 // 获取html-webpack-plugin参数的方法
