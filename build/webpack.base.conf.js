@@ -118,7 +118,7 @@ module.exports = {
 		splitChunks: {
 			chunks: 'async',
 			minSize: 30000,
-			minChunks: 1,
+			minChunks: 2,
 			maxAsyncRequests: 5,
 			maxInitialRequests: 3,
 			name: false,
@@ -133,28 +133,6 @@ module.exports = {
 			}
 		}
 	},
-	// optimization: {
-	// 	// runtimeChunk: {
-	// 	//     name: "manifest"
-	// 	// },
-	// 	splitChunks: {
-	// 		cacheGroups: {
-	// 			commons: {
-	// 				chunks: 'initial',
-	// 				minChunks: 2,
-	// 				maxInitialRequests: 5,
-	// 				minSize: 0
-	// 			},
-	// 			vendor: { // 将第三方模块提取出来
-	// 				test: /node_modules\/(.*)\.js/,
-	// 				chunks: 'initial',
-	// 				name: 'vendor',
-	// 				priority: 10, // 优先
-	// 				enforce: true
-	// 			}
-	// 		}
-	// 	}
-	// }
 }
 
 
