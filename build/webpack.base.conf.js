@@ -4,8 +4,7 @@ const glob = require("glob");
 // 分离css
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const devMode = process.env.NODE_ENV !== 'production';
-//作用域提升
-const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
+
 //消除冗余的css
 const purifyCssWebpack = require("purifycss-webpack");
 //happy
