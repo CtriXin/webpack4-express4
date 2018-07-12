@@ -12,6 +12,12 @@ const morgan = require('morgan');
 var i18next = require('i18next');
 var i18nFsBackend = require('i18next-node-fs-backend');
 var i18nextMiddleware = require('i18next-express-middleware');
+//grpc
+const grpc = require('grpc');
+var proto_path = __dirname + '/proto/your_file.proto';
+var java_proto = grpc.load(proto_path).your_package_name;
+var grpcClient = new java_proto.your_server_name('your_grpc_server', grpc.credentials.createInsecure());
+
 // 初始化 i18next 多语言
 i18next.use(i18nFsBackend).use(i18nextMiddleware.LanguageDetector).init({
   // lng: 'zh-CN', //设置当前翻译的语言(如果没有设置具体的lng,会查看querrustringparameter中是否有?setLng=zh-CN的设置、会检查cookie中是否有i18n曾设置的语言、或检查浏览器语言)
