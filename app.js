@@ -1,5 +1,7 @@
 // 加载依赖库
 const express = require('express');
+// 创建项目实例
+const app = express();
 const fs = require('fs'); //加了文件操作的模块
 const path = require('path'); //加了解析路径的模块
 const cookieParser = require('cookie-parser');
@@ -8,8 +10,7 @@ const morgan = require('morgan');//日志
 var i18next = require('i18next');
 var i18nFsBackend = require('i18next-node-fs-backend');
 var i18nextMiddleware = require('i18next-express-middleware');
-// 创建项目实例
-var app = express();
+
 
 // 初始化 i18next 多语言
 i18next.use(i18nFsBackend).use(i18nextMiddleware.LanguageDetector).init({
