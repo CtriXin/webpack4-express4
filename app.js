@@ -2,16 +2,16 @@
 const express = require('express');
 // 创建项目实例
 const app = express();
-const fs = require('fs'); //加了文件操作的模块
-const path = require('path'); //加了解析路径的模块
+//文件和解析模块
+const fs = require('fs');
+const path = require('path');
 const cookieParser = require('cookie-parser');
-const morgan = require('morgan');//日志
+//日志
+const morgan = require('morgan'); 
 //多语言
 var i18next = require('i18next');
 var i18nFsBackend = require('i18next-node-fs-backend');
 var i18nextMiddleware = require('i18next-express-middleware');
-
-
 // 初始化 i18next 多语言
 i18next.use(i18nFsBackend).use(i18nextMiddleware.LanguageDetector).init({
   // lng: 'zh-CN', //设置当前翻译的语言(如果没有设置具体的lng,会查看querrustringparameter中是否有?setLng=zh-CN的设置、会检查cookie中是否有i18n曾设置的语言、或检查浏览器语言)
