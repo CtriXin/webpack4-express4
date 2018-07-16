@@ -1,13 +1,17 @@
+/*
+ * @Author: xin.song 
+ * @Date: 2018-07-07 18:47:38 
+ * @Last Modified by: xin.song
+ * @Last Modified time: 2018-07-16 10:50:39
+ */
 const path = require('path');
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 const os = require('os');
 
 //4.x之后用以压缩
-// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
-//炫酷吊炸天的检查代码大小
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+//压缩css
 var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const webpackConfigBase = require('./webpack.base.conf');
 const webpackConfigProd = {
