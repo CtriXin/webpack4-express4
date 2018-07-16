@@ -1,3 +1,9 @@
+/*
+ * @Author: xin.song 
+ * @Date: 2018-07-07 18:47:38 
+ * @Last Modified by: xin.song
+ * @Last Modified time: 2018-07-16 10:48:13
+ */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 const devMode = process.env.NODE_ENV !== 'production';
@@ -10,12 +16,6 @@ const rules = [{
 			'sass-loader',
 		],
 	},
-	// {
-	// 	test: /\.js$/,
-	// 	use: ["babel-loader?cacheDirectory"],
-	// 	// 不检查node_modules下的js文件
-	// 	exclude: "/node_modules/"
-	// },
 	{
 		test: /\.js/,
 		use: 'happypack/loader?id=happy-babel-js', // 增加新的HappyPack构建loader
