@@ -1,3 +1,11 @@
+/*
+ * @Author: xin.song 
+ * @Date: 2018-07-07 18:47:38 
+ * @Last Modified by:   xin.song 
+ * @Last Modified time: 2018-07-16 10:47:38 
+ */
+
+//引用
 const path = require('path');
 const webpack = require("webpack");
 const glob = require("glob");
