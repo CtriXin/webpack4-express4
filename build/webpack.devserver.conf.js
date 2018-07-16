@@ -2,7 +2,7 @@
  * @Author: xin.song 
  * @Date: 2018-07-07 18:47:38 
  * @Last Modified by: xin.song
- * @Last Modified time: 2018-07-16 10:50:39
+ * @Last Modified time: 2018-07-16 10:51:36
  */
 const path = require('path');
 const webpack = require("webpack");
@@ -58,7 +58,6 @@ const webpackConfigProd = {
 				}
 			}
 		}),
-		// new BundleAnalyzerPlugin(),
 	],
 	module: {
 		rules: []
