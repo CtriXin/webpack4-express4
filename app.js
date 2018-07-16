@@ -9,9 +9,9 @@ const cookieParser = require('cookie-parser');
 //日志
 const morgan = require('morgan'); 
 //多语言
-var i18next = require('i18next');
-var i18nFsBackend = require('i18next-node-fs-backend');
-var i18nextMiddleware = require('i18next-express-middleware');
+const i18next = require('i18next');
+const i18nFsBackend = require('i18next-node-fs-backend');
+const i18nextMiddleware = require('i18next-express-middleware');
 //grpc
 const grpc = require('grpc');
 var proto_path = __dirname + '/proto/your_file.proto';
