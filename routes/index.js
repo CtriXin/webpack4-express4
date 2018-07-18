@@ -1,8 +1,8 @@
 /*
  * @Author: xin.song 
  * @Date: 2018-07-18 10:03:55 
- * @Last Modified by:   xin.song 
- * @Last Modified time: 2018-07-18 10:03:55 
+ * @Last Modified by: xin.song
+ * @Last Modified time: 2018-07-18 10:04:28
  */
 
 const express = require('express');
@@ -18,7 +18,6 @@ router.use(function (req, res, next) {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  // console.log(req.query.token, req.query.uid);
   console.log('用户语言：', req.language, req.acceptsLanguages());
   res.render('index', {
     // title: req.t('lang'),
