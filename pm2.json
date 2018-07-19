@@ -2,7 +2,7 @@
     "apps": [{
         "name": "musicash",
         "script": "bin/www",
-        "instances": 4,
+        "instances": 0,
         "exec_mode": "cluster_mode",
         "watch": true,
         "max_memory_restart": "150M",
