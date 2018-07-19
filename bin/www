@@ -73,3 +73,79 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+
+
+//websocket
+var io = require('socket.io')(server);
+var users = {};
+var userGroup = [];
+//
+// io.emit === io.socket.emit === 向服务器所有连接发送事件
+// socket.emit == 向本链接发送事件
+//
+io.on('connection', function (socket) {
+  //当有用户连接
+  console.log('a user connected socketid is', socket.id);
+
+  /*是否是新用户标识*/
+  var isNewPerson = true;
+  /*当前登录用户*/
+  var username = null;
+
+  console.log(userGroup);
+  /*监听登录*/
+  socket.on('add user', function (data) {
+    for (var i = 0; i < userGroup.length; i++) {
+      if (userGroup[i].username === data.userName) {
+        isNewPerson = false
+        break;
+      } else {
+        isNewPerson = true
+      }
+    }
+    /*登录成功*/
+    socket.emit('loginSuccess', data)
+
+    if (isNewPerson) {
+      username = data.userName
+      userGroup.push({
+        username: data.userName
+      })
+      console.log('loginSuccess');
+      /*向所有连接的客户端广播add事件*/
+      io.emit('username add', data.userName);
+    } else {
+      // /*登录失败*/
+      // console.log('loginFail');
+      // socket.emit('loginFail', '');
+
+      console.log('用户又登录了');
+      io.emit('loginAgain', data.userName);
+
+    }
+  })
+
+
+  // socket.on('add user', function (data) {
+  //   console.log(data.userName + ' just connected');
+  //   //saving userId to array with socket ID
+  //   users[socket.id] = data.userName;
+  //   io.emit('username add', data.userName);
+  // });
+  // socket.on('disconnect', function () {
+  //   //当有用户关闭
+  //   console.log('user ' + users[socket.id] + ' disconnected');
+  // });
+  socket.on('post message', function (data) {
+    //chat message方法在页面中定义
+    console.log(data);
+    //发布给所有用户
+    io.emit('publish message', data);
+  });
+
+  socket.on('disconnect', function () {
+    /*向所有连接的客户端广播leave事件*/
+    io.sockets.emit('leave', username)
+  })
+});
