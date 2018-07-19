@@ -7,7 +7,7 @@
     "try": "echo \"Error: no test specified\" && exit 1",
     "test": "cross-env NODE_ENV=testing webpack  --config build/webpack.dev.conf.js ",
     "--上面---": "本地执行的一次性脚本，会进行图片压缩",
-    "watch": "cross-env NODE_ENV=testing webpack  --config build/webpack.dev.conf.js --watch",
+    "watch": "cross-env NODE_ENV=testing webpack  --config build/webpack.dev.conf.js --watch ",
     "--上面----": "本地执行的监控脚本",
     "dev": "cross-env NODE_ENV=development webpack  --config build/webpack.dev.conf.js --display-optimization-bailout",
     "--上面--": "开发环境下的一次性打包脚本，快速",
@@ -58,6 +58,7 @@
     "purifycss-webpack": "^0.7.0",
     "request": "^2.87.0",
     "sass-loader": "^7.0.1",
+    "socket.io": "^2.1.1",
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "url-loader": "^1.0.1",
@@ -67,7 +68,9 @@
     "webpack-cli": "^3.0.8",
     "webpack-dev-server": "^3.1.4",
     "webpack-merge": "^4.1.2",
-    "webpack-parallel-uglify-plugin": "^1.1.0"
+    "webpack-parallel-uglify-plugin": "^1.1.0",
+    "xgplayer": "^1.0.4",
+    "xgplayer-mp4": "^1.0.4"
   },
   "devDependencies": {
     "babel-plugin-component": "^1.1.1",
