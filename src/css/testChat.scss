@@ -1,0 +1,168 @@
+@import "base/base.scss";
+body {
+    font-size: rem(12);
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+.shadow {
+    position: fixed;
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    z-index: 9;
+    background: black;
+}
+
+.add-users {
+    position: fixed;
+    z-index: 10;
+    width: rem(325);
+    height: rem(80);
+    top: 50%;
+    left: 50%;
+    margin-top: rem(-15);
+    margin-left: rem(-162.5);
+    .add-user-title {
+        color: #fff;
+        font-size: rem(16);
+        margin-bottom: rem(8);
+    }
+    .add-users-group {
+        display: flex;
+        align-items: center;
+        input {
+            padding: 0 rem(10);
+            width: 58%;
+            height: rem(30);
+            margin-right: .5%;
+            font-size: rem(12);
+            border: 1px solid #fff;
+        }
+        .add-user-btn {
+            background: #0db2ff;
+            width: rem(30);
+            color: white;
+            height: rem(30);
+            width: rem(50);
+            margin-left: rem(10);
+            text-align: center;
+            line-height: rem(30);
+        }
+    }
+}
+
+.msg {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    background: gray;
+    height: rem(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    input {
+        padding: rem(10);
+        width: 77%;
+        margin-right: .5%;
+        border: rem(1) solid gray;
+        font-size: rem(12);
+    }
+    .msg-btn {
+        width: 15%;
+        background: rgb(130, 224, 255);
+        border: none;
+        padding: rem(10);
+    }
+}
+
+#messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#messages li {
+    padding: rem(5) rem(10);
+}
+
+#messages li:nth-child(odd) {
+    background: #eee;
+}
+
+#memo {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .memo-info {
+        text-align: center;
+        background: #cbcaca;
+        color: white;
+        padding: rem(5) rem(20);
+        margin-bottom: rem(7);
+        border-radius: rem(4);
+    }
+}
+
+/*聊天界面*/
+
+.my-message-keepme {
+    display: flex;
+    flex-direction: row-reverse;
+    /* flex-wrap: wrap-reverse; */
+    justify-content: flex-start;
+    align-items: center;
+    align-content: stretch;
+    width: rem(350);
+    margin-left: rem(25);
+    margin-bottom: rem(20);
+    .my-avatar {
+        width: rem(40);
+        height: rem(40);
+        background: red;
+        border-radius: 50%;
+        margin-right: rem(20);
+        margin-left: rem(20);
+    }
+    .my-message-txt {
+        max-width: rem(250);
+        word-wrap: break-word;
+    }
+}
+
+.fri-message-keepme {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: stretch;
+    width: rem(350);
+    margin-bottom: rem(20);
+    .fri-avatar {
+        width: rem(40);
+        height: rem(40);
+        background: yellow;
+        border-radius: 50%;
+        margin-right: rem(20);
+        margin-left: rem(20);
+    }
+    .fri-message-group {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: flex-start;
+        align-content: stretch;
+        width: rem(250);
+        .fri-name {
+            font-size: rem(11);
+        }
+        .fri-message-txt {
+            font-size: rem(14);
+            margin-top: rem(2);
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+    }
+}
