@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ../includes/remHeader.html %>
+</head>
+
+
+
+<body>
+    <div id="vm">
+
+
+        <h1>聊天室</h1>
+
+
+
+
+        <div class="add-users" v-show="addName">
+            <div class="add-user-title">
+                请登录/输入您的用户名
+            </div>
+            <div class="add-users-group">
+                <input id="add-user-input" />
+                <div class="add-user-btn" @click="adduser()">
+                    确定
+                </div>
+            </div>
+        </div>
+
+
+        <div class="shadow" v-show="addName"></div>
+
+
+        <!-- 
+        <div>请输入用户名</div>
+        <form class="username" action="">
+            <input id="uname" autocomplete="off" />
+            <button>确定</button>
+        </form> -->
+
+        <div id="memo">
+
+        </div>
+
+
+        <div class="chat-con">
+            
+            
+        </div>
+
+        <ul id="messages"></ul>
+        <!-- <form class="msg" action="">
+            <input id="msg" autocomplete="off" />
+            <button>Send</button>
+        </form> -->
+        <div class="msg" action="">
+            <input id="msg" autocomplete="off" />
+            <div class="msg-btn" @click="sendMsg()">biubiu</div>
+        </div>
+    </div>
+</body>
+
+</html>
