@@ -80,6 +80,20 @@ function onListening() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //websocket
 var io = require('socket.io')(server);
 var users = {};
@@ -134,7 +148,7 @@ io.on('connection', function (socket) {
     if (isNewPerson) {
       userGroup.push({
         username: data.username,
-        useravatar: data.avatar
+        avatar: data.avatar
       })
       console.log('loginSuccess');
       /*向所有连接的客户端广播add事件*/
@@ -171,6 +185,10 @@ io.on('connection', function (socket) {
   socket.on('checkRoom', function () {
     console.log(roomGroup.public);
     io.emit('showRoom', roomGroup.public);
+  });
+  socket.on('checkUser', function () {
+    console.log(userGroup);
+    io.emit('showUser', userGroup);
   });
 
 
@@ -258,6 +276,10 @@ io.on('connection', function (socket) {
       userInRoom[data.room].push({
         username: data.username,
         avatar: data.avatar,
+      })
+      userGroup.push({
+        username: data.username,
+        avatar: data.avatar
       })
       console.log('loginSuccessRoom', userInRoom[data.room]);
       /*向所有连接的客户端广播add事件*/
