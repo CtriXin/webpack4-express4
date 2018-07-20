@@ -4,6 +4,29 @@ body {
     font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
+.header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    padding: 0 rem(10);
+    .logout {
+        width: rem(50);
+        background: rgb(130, 224, 255);
+        text-align: center;
+        height: rem(25);
+        line-height: rem(25);
+        color: white;
+        // z-index: 99;
+    }
+}
+
+.total-num {
+    padding: 0 rem(10);
+}
+
 .shadow {
     position: fixed;
     width: 100vw;
@@ -13,15 +36,59 @@ body {
     background: black;
 }
 
-.add-users {
-    position: fixed;
+.adg-user-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    left: 0;
     z-index: 10;
-    width: rem(325);
-    height: rem(80);
-    top: 50%;
-    left: 50%;
-    margin-top: rem(-15);
-    margin-left: rem(-162.5);
+    position: fixed;
+}
+
+.avatar-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    margin: rem(10) 0;
+    .avatar-item {
+        width: rem(50);
+        position: relative;
+        img {
+            width: 100%;
+            display: block;
+        }
+        .avatar-img-keepme {
+            opacity: .8;
+        }
+        .correct-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: rem(19);
+        }
+        .select-shadow {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.25);
+            top: 0;
+            left: 0;
+        }
+    }
+}
+
+.add-users {
+    z-index: 10;
+    width: 80%;
     .add-user-title {
         color: #fff;
         font-size: rem(16);
@@ -38,17 +105,34 @@ body {
             font-size: rem(12);
             border: 1px solid #fff;
         }
-        .add-user-btn {
+    }
+}
+
+.room-group {
+    margin: rem(5) 0;
+    display: flex;
+    justify-content: flex-start;
+    .room-item {
+        background: #eee;
+        color: black;
+        padding: rem(5);
+        margin-right: rem(3);
+        text-align: center;
+        &.room-item-select-keepme {
             background: #0db2ff;
-            width: rem(30);
             color: white;
-            height: rem(30);
-            width: rem(50);
-            margin-left: rem(10);
-            text-align: center;
-            line-height: rem(30);
         }
     }
+}
+
+.add-user-btn {
+    background: #0db2ff;
+    width: rem(30);
+    color: white;
+    height: rem(30);
+    width: rem(50);
+    text-align: center;
+    line-height: rem(30);
 }
 
 .msg {
@@ -71,6 +155,8 @@ body {
         width: 15%;
         background: rgb(130, 224, 255);
         border: none;
+        text-align: center;
+        font-weight: 600;
         padding: rem(10);
     }
 }
@@ -90,14 +176,23 @@ body {
 }
 
 #memo {
+    margin-bottom: rem(80);
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    .memo-info {
+    .time-keepme {
         text-align: center;
+        color: #000;
+        padding: rem(5);
+        font-size: rem(10);
+        margin-bottom: rem(7);
+        border-radius: rem(4);
+    }
+    .memo-info {
         background: #cbcaca;
         color: white;
+        text-align: center;
         padding: rem(5) rem(20);
         margin-bottom: rem(7);
         border-radius: rem(4);
@@ -123,6 +218,11 @@ body {
         border-radius: 50%;
         margin-right: rem(20);
         margin-left: rem(20);
+        img {
+            width: 100%;
+            display: block;
+            border-radius: 50%;
+        }
     }
     .my-message-txt {
         max-width: rem(250);
@@ -132,6 +232,7 @@ body {
 
 .fri-message-keepme {
     display: flex;
+    margin-right: rem(25);
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -146,6 +247,11 @@ body {
         border-radius: 50%;
         margin-right: rem(20);
         margin-left: rem(20);
+        img {
+            width: 100%;
+            display: block;
+            border-radius: 50%;
+        }
     }
     .fri-message-group {
         display: flex;
