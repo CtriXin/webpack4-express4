@@ -14,6 +14,15 @@ router.get('/chat', function (req, res, next) {
     title: '测试socket.io'
   });
 });
+router.get('/chat/:roomID', function (req, res, next) {
+  var roomID = req.params.roomID;
+  res.render('testing/room', {
+    title: '测试socket.io',
+    roomid: roomID
+  });
+});
+
+
 
 
 module.exports = router;
