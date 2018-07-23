@@ -2,7 +2,7 @@
  * @Author: xin.song 
  * @Date: 2018-07-04 17:39:03 
  * @Last Modified by: xin.song
- * @Last Modified time: 2018-07-20 17:28:25
+ * @Last Modified time: 2018-07-23 15:21:44
  */
 import Vue from 'vue';
 
@@ -33,7 +33,7 @@ let indexPage = {
     created: function () {
         let self = this;
 
-
+        
 
         socket.emit('join', {
             room: self.room,
