@@ -2,7 +2,7 @@
  * @Author: xin.song 
  * @Date: 2018-07-04 17:39:03 
  * @Last Modified by: xin.song
- * @Last Modified time: 2018-07-20 17:50:25
+ * @Last Modified time: 2018-07-23 15:21:28
  */
 import Vue from 'vue';
 
@@ -30,102 +30,42 @@ let indexPage = {
         thisMsgTime: 1,
         room: '',
         roomlist:'',
+        userList: '',
     },
     created: function () {
         let self = this;
 
         socket.emit('checkRoom');
+        socket.emit('checkUser');
+        socket.emit('checkTotalNum');
+
+
+
+
 
 
         
-        let myname = sessionStorage.getItem('myname');
-        let myavatar = sessionStorage.getItem('myavatar');
-        self.baseTime = new Date().toLocaleString();
-        if (myname != null && myavatar != null) {
-            console.log('用户已登录');
-            self.myname = myname;
-            self.avatar = myavatar;
-            self.addName = false;
-
-            socket.emit('add user', {
-                username: myname,
-                avatar: myavatar
-            });
-        }
         self.lastMsgTime = Math.round(new Date().getTime() / 1000)
 
     },
     mounted: function () {
         let self = this;
-        // 加入房间
-        socket.on('publish message', function (data) {
-            self.thisMsgTime = Math.round(new Date().getTime() / 1000)
-            console.log(self.thisMsgTime - self.lastMsgTime);
-            let nowtime = new Date().toLocaleString();
-            let time
-            if (self.thisMsgTime - self.lastMsgTime > 60) {
-                time = '<div class="time-keepme">' + nowtime + '</div>'
-            }
-            $('#memo').append(time);
-
-            let html
-            if (data.uname === self.myname) {
-                html = '<div class="my-message-keepme"><div class="my-avatar"><img src="' + data.avatar + '" alt=""></div><div class="my-message-txt">' + data.msg + '</div></div>'
-            } else {
-                html = '<div class="fri-message-keepme"><div class="fri-avatar"><img src="' + data.avatar + '" alt=""></div><div class="fri-message-group"><div class="fri-name">' + data.uname + '</div><div class="fri-message-txt">' + data.msg + '</div></div></div>'
-            }
-            $('#memo').append(html);
-            window.scrollTo(0, document.body.scrollHeight)
-        });
-
-        socket.on('username add', function (user) {
-            $('#memo').append($('<div class="memo-info">').text('用户 ' + user + ' 刚刚登陆'));
-        });
-
-        socket.on('count num', function (num) {
-            self.totalNum = num;
-        });
-
+        //显示房间列表
         socket.on('showRoom', function (data) {
             self.roomlist = data;
         });
 
-
-        //登录成功
-        socket.on('loginSuccess', function (data) {
-            self.myname = data.username
-            self.addName = false;
-            sessionStorage.setItem('myname', data.username);
-            sessionStorage.setItem('myavatar', data.avatar);
-            return false;
+        //显示在线用户
+        socket.on('showUser', function (data) {
+            console.log('用户信息',data);
+            self.userList = data;
+            console.log(self.userList);
         });
 
-        //登录失败
-        socket.on('loginFail', function () {
-            alert('昵称重复')
-        });
-
-        //又登陆了
-        socket.on('loginAgain', function (user) {
-            $('#memo').append($('<div class="memo-info">').text('用户 ' + user + ' 又回来了'));
-        });
-
-        /*退出群聊提示*/
-        socket.on('leave', function (name) {
-            console.log(name);
-            if (name != null) {
-                $('#memo').append($('<div class="memo-info">').text('用户 ' + name + ' 已退出'));
-                $('.avatar-img').removeClass('avatar-img-keepme');
-                $('.correct-icon').hide();
-                self.addName = true
-            }
-        })
-
-
-        // 监听房间消息
-        socket.on('roomMsg', function (msg, room) {
-            console.log('hahaha');
-            $('#memo').append($('<div class="memo-info">').text(msg + room));
+        //显示在线用户
+        socket.on('showTotalNum', function (num) {
+            self.totalNum = num;
+            console.log(self.totalNum);
         });
 
 
