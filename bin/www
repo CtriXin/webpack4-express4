@@ -5,110 +5,89 @@
  */
 
 // 依赖加载
-var app = require('../app');
-var debug = require('debug')('musicash-web:server');
-var http = require('http');
-
-
-
+var app = require("../app");
+var debug = require("debug")("musicash-web:server");
+var http = require("http");
 
 // 定义启动端口
-let pm2Instance = process.env.NODE_APP_INSTANCE || 1
-var port = normalizePort(process.env.PORT || '5656') + parseInt(pm2Instance);
-app.set('port', port);
-
+let pm2Instance = process.env.NODE_APP_INSTANCE || 1;
+var port = normalizePort(process.env.PORT || "5656") + parseInt(pm2Instance);
+app.set("port", port);
 
 // 创建HTTP服务器实例
 var server = http.createServer(app);
 
 // 启动网络服务监听端口
 server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+server.on("error", onError);
+server.on("listening", onListening);
 
 // console.log(process.env.NODE_APP_INSTANCE);
 
 // 端口标准化函数
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+    var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+    if (port >= 0) {
+        // port number
+        return port;
+    }
 
-  return false;
+    return false;
 }
 
 // HTTP异常事件处理函数
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+    if (error.syscall !== "listen") {
+        throw error;
+    }
 
-  var bind = typeof port === 'string' ?
-    'Pipe ' + port :
-    'Port ' + port;
+    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case "EACCES":
+            console.error(bind + " requires elevated privileges");
+            process.exit(1);
+            break;
+        case "EADDRINUSE":
+            console.error(bind + " is already in use");
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 }
 
 // 事件绑定函数
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string' ?
-    'pipe ' + addr :
-    'port ' + addr.port;
-  debug('Listening on ' + bind);
+    var addr = server.address();
+    var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    debug("Listening on " + bind);
 }
 
+/**
+ * websocket
+ */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//websocket
+//basic
 var io = require("socket.io")(server);
 var users = {};
 var userGroup = [];
 var roomGroup = {
     public: ["默认房间"],
-    privite: ["love"]
+    private: ["love"]
 };
 var userInRoom = {
-    room1: [
-        {
-            username: "AA",
-            avatar: "fdaf"
-        }
-    ]
+    room1: [{
+        username: "AA",
+        avatar: "fdaf"
+    }]
 };
 
 //
@@ -116,7 +95,7 @@ var userInRoom = {
 // socket.emit == 向本链接发送事件
 //
 
-io.on("connection", function(socket) {
+io.on("connection", function (socket) {
     //当有用户连接
     // console.log(userGroup, roomGroup);
     console.log("用户信息", userGroup);
@@ -130,21 +109,130 @@ io.on("connection", function(socket) {
     var defaultUseravatar = null;
 
     //进入默认首页后 检查房间数 检查在线人数 检查用户信息
-    socket.on("checkRoom", function() {
+    socket.on("checkRoom", function () {
         // console.log(roomGroup.public);
         io.emit("showRoom", roomGroup.public);
     });
-    socket.on("checkUser", function() {
+    socket.on("checkUser", function () {
         // console.log(userGroup);
         io.emit("showUser", userGroup);
     });
-    socket.on("checkTotalNum", function() {
+    socket.on("checkTotalNum", function () {
         // console.log(userGroup);
         io.emit("showTotalNum", userGroup.length);
     });
 
+    //开始聊天
+    socket.on("gochat", function (data) {
+        console.log(data);
+        console.log(defaultUser);
+        let tosid;
+        for (var i in userGroup) {
+            if (userGroup[i].uid == data.uid) {
+                tosid = userGroup[i].sid;
+            }
+        }
+        io.to(tosid).emit("startChat", {
+            //开始聊天，并传输我的sid和他的sid
+            fromuid: defaultUser.uid,
+            touid: data.uid,
+            room: defaultUser.uid + '-' + data.uid
+        });
+    });
+
+    //从sessionstorage里读取的信息
+    socket.on("loadInfo", function (data) {
+        defaultUser = data;
+        defaultUser.sid = socket.id;
+        let uid
+        if (!data.uid) {
+            if (userGroup.length == 0) {
+                uid = 1
+            } else {
+                uid = userGroup[userGroup.length - 1].uid + 1
+            }
+        } else {
+            uid = data.uid
+        }
+        defaultUser.uid = uid;
+        console.log("sessionStorage存储的信息更新后为", defaultUser);
+        socket.emit("updateid", {
+            sid: socket.id,
+            uid: uid
+        });
+        let ingroup = false;
+        for (var i = 0; i < userGroup.length; i++) {
+            if (userGroup[i].username == data.username) {
+                userGroup[i].sid = socket.id
+                userGroup[i].uid = defaultUser.uid
+                ingroup = true;
+                break;
+            }
+        }
+        if (!ingroup) {
+            console.log('push');
+            userGroup.push(defaultUser);
+        }
+
+        io.emit("showTotalNum", userGroup.length);
+        io.emit("showUser", userGroup);
+    });
+
+    // 注册
+    socket.on("signin", function (data) {
+        for (var i = 0; i < userGroup.length; i++) {
+            if (userGroup[i].username === data.username) {
+                isNewPerson = false;
+                break;
+            } else {
+                isNewPerson = true;
+            }
+        }
+        /*登录成功*/
+        defaultUser.username = data.username;
+        defaultUser.avatar = data.avatar;
+        defaultUser.sid = socket.id;
+        if (data.room) {
+            defaultUser.room = data.room;
+        } else {
+            defaultUser.room = "default";
+        }
+        if (isNewPerson) {
+            let uid;
+            if (userGroup.length == 0) {
+                uid = 1
+            } else {
+                uid = userGroup[userGroup.length - 1].uid + 1
+            }
+            defaultUser.uid = uid;
+            userGroup.push({
+                username: data.username,
+                avatar: data.avatar,
+                sid: socket.id,
+                uid: uid
+            });
+            console.log("signSuccess");
+            socket.emit("signInSuccess", {
+                userInfo: defaultUser,
+                oldUser: false
+            });
+        } else {
+            // console.log(defaultUser, data);
+            console.log(data.username + "用户又登录了");
+            socket.emit("loginSuccess", {
+                userInfo: defaultUser,
+                oldUser: true,
+                sid: socket.id
+            });
+        }
+        //更新所有用户的用户数
+        io.emit("showTotalNum", userGroup.length);
+        io.emit("showUser", userGroup);
+        console.log("更新用户信息", userGroup);
+    });
+
     /*监听登录*/
-    socket.on("add user", function(data) {
+    socket.on("add user", function (data) {
         for (var i = 0; i < userGroup.length; i++) {
             if (userGroup[i].username === data.username) {
                 isNewPerson = false;
@@ -175,7 +263,7 @@ io.on("connection", function(socket) {
         io.emit("count num", userGroup.length);
     });
 
-    socket.on("post message", function(data) {
+    socket.on("post message", function (data) {
         //chat message方法在页面中定义
         console.log(data);
         //发布给所有用户
@@ -188,7 +276,7 @@ io.on("connection", function(socket) {
 
     // 是否是新房间标识
     var isNewRoom = false;
-    socket.on("join", function(data) {
+    socket.on("join", function (data) {
         // 获取请求建立socket连接的url
         // 如: http://localhost:5656/room/room_1, roomID为room_1
         var url = socket.request.headers.referer;
@@ -223,7 +311,7 @@ io.on("connection", function(socket) {
         } else {
             for (var i = 0; i < roomGroup.private.length; i++) {
                 // console.log(roomGroup.public[i], data.room);
-                if (roomGroup.public[i] === data.room) {
+                if (roomGroup.private[i] === data.room) {
                     isNewRoom = false;
                     break;
                 } else {
@@ -237,18 +325,13 @@ io.on("connection", function(socket) {
         }
     });
     // 监听登录
-    socket.on("newUserRoom", function(data) {
+    socket.on("newUserRoom", function (data) {
         console.log("此次用户的socket id " + socket.id);
         console.log("传过来的用户数据", data);
         for (var i = 0; i < userGroup.length; i++) {
             if (userGroup[i].username === data.username) {
-                isNewPerson = false;
                 //从新设定用户的socket id
-                userGroup[i].id = socket.id;
-                userInRoom[data.room][i].id = socket.id;
-                break;
-            } else {
-                isNewPerson = true;
+                userGroup[i].sid = socket.id;
             }
         }
         /*登录成功*/
@@ -258,42 +341,141 @@ io.on("connection", function(socket) {
         defaultUser.room = data.room;
         if (!userInRoom[data.room]) {
             userInRoom[data.room] = [];
+            isNewPerson = true;
+            console.log("没有房间数据");
+        } else {
+            for (var i = 0; i < userInRoom[data.room].length; i++) {
+                if (userInRoom[data.room][i].username === data.username) {
+                    isNewPerson = false;
+                    //从新设定用户的socket id
+                    userInRoom[data.room][i].sid = socket.id;
+                }
+            }
         }
+
         console.log("房间内的用户数据", userInRoom[data.room]);
         if (isNewPerson) {
             userInRoom[data.room].push({
                 username: data.username,
                 avatar: data.avatar,
-                id: socket.id
+                sid: socket.id,
+                room: data.room
             });
+            let uid;
+            if (userGroup.length == 0) {
+                uid = 1
+            } else {
+                uid = userGroup[userGroup.length - 1].uid + 1
+            }
             userGroup.push({
                 username: data.username,
                 avatar: data.avatar,
-                id: socket.id
+                sid: socket.id,
+                uid: uid
             });
-            console.log("成功登陆房间，房间内的用户信息", userInRoom[data.room]);
+            console.log(
+                "成功登陆房间，房间内的用户信息",
+                userInRoom[data.room]
+            );
             /*向所有连接的客户端广播add事件*/
             io.to(data.room).emit("signSuccessRoom", data.username);
         } else {
             //又登录了
+            // userInRoom[data.room].push({
+            //     username: data.username,
+            //     avatar: data.avatar,
+            //     sid: socket.id,
+            //     room: data.room
+            // });
             io.to(data.room).emit("loginAgainRoom", data.username);
         }
 
         io.to(data.room).emit("countNumRoom", userInRoom[data.room].length);
     });
 
-    socket.on("postMessageRoom", function(data) {
+    // 更新房间数据
+    socket.on("updateUserRoom", function (data) {
+        console.log("此次用户的更新后socket id " + socket.id);
+        console.log("传过来的用户数据", data);
+        /*登录成功*/
+        socket.emit("loginSuccessRoom", data);
+        defaultUser.room = data.room;
+        let updateNewPerson = false;
+        if (!userInRoom[data.room]) {
+            userInRoom[data.room] = [];
+            updateNewPerson = true;
+            console.log("没有房间数据");
+            userInRoom[data.room].push({
+                username: data.username,
+                avatar: data.avatar,
+                sid: socket.id,
+                room: data.room
+            });
+        } else {
+            for (var i = 0; i < userInRoom[data.room].length; i++) {
+                if (userInRoom[data.room][i].username === data.username) {
+                    updateNewPerson = true;
+                    //从新设定用户的socket id
+                    userInRoom[data.room][i].sid = socket.id;
+                    break;
+                }
+            }
+            if (!updateNewPerson) {
+                userInRoom[data.room].push({
+                    username: data.username,
+                    avatar: data.avatar,
+                    sid: socket.id,
+                    room: data.room
+                });
+            }
+        }
+
+
+
+        console.log("房间内的用户数据", userInRoom[data.room]);
+        io.to(data.room).emit("loginAgainRoom", data.username);
+        io.to(data.room).emit("countNumRoom", userInRoom[data.room].length);
+    });
+
+    let historyMsg = [];
+    socket.on("postMessageRoom", function (data) {
         //chat message方法在页面中定义
-        console.log(data);
+        console.log(data, historyMsg);
+        historyMsg.push(data);
         //发布给所有用户
+        if (historyMsg.length > 3) {
+            //删除大于三的数量 保持数组中永远只有三个数据
+            historyMsg.splice(0, historyMsg.length - 3);
+        }
+        let roomGroup = data.room.split('-');
+        let touid;
+        for (var i in roomGroup) {
+            if (roomGroup[i] != data.uid) {
+                touid = roomGroup[i]
+            }
+        }
+        console.log(touid);
+        let tosid;
+        for (var j in userGroup) {
+            if (userGroup[j].uid == touid) {
+                tosid = userGroup[j].sid
+            }
+        }
+        console.log(tosid);
+        io.to(tosid).emit("historyMsg", {
+            Msg: historyMsg,
+            fromuid: data.uid,
+            room: data.room
+        });
+        io.to(data.room).emit("historyMsgRoom", historyMsg);
         io.to(data.room).emit("publishMessageRoom", data);
     });
 
-    socket.on("logoutRoom", function(data) {
+    socket.on("logoutRoom", function (data) {
         console.log(data.username);
         /*向所有连接的客户端广播leave事件*/
         io.to(data.room).emit("leaveRoom", data.username);
-        userInRoom[data.room].map(function(val, index) {
+        userInRoom[data.room].map(function (val, index) {
             console.log(val, index);
             if (val.username === data.username) {
                 userInRoom[data.room].splice(index, 1);
@@ -302,12 +484,12 @@ io.on("connection", function(socket) {
         io.to(data.room).emit("countNumRoom", userInRoom[data.room].length);
     });
 
-    socket.on("disconnect", function() {});
+    socket.on("disconnect", function () {});
 });
 
 //namespace
 var nsp = io.of("/my-namespace");
-nsp.on("connection", function(socket) {
+nsp.on("connection", function (socket) {
     console.log("someone connected");
 });
 nsp.emit("hi", "everyone!");
