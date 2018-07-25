@@ -84,6 +84,7 @@ var roomGroup = {
     private: ["love"]
 };
 var userInRoom = {
+    //用户在房间的情况
     room1: [{
         username: "AA",
         avatar: "fdaf"
