@@ -4749,9 +4749,9 @@ i18next-node-fs-backend@0.0.6:
   dependencies:
     json5 "0.4.0"
 
-i18next@~2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-2.2.0.tgz#d5e19088176da13eeed055ff7d960429092ac6f2"
+i18next@^11.4.0:
+  version "11.4.0"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-11.4.0.tgz#9179bc27b74158d773893356f19b039bedbc355a"
 
 iconv-lite@0.4.15:
   version "0.4.15"
