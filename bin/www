@@ -77,9 +77,9 @@ function onListening() {
 
 //basic
 var io = require("socket.io")(server);
-var users = {};
-var userGroup = [];
+var userGroup = []; //定义用户组
 var roomGroup = {
+    //定义房间组，分为公共和私有
     public: ["默认房间"],
     private: ["love"]
 };
