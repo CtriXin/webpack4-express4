@@ -2,7 +2,7 @@
  * @Author: xin.song 
  * @Date: 2018-07-04 17:39:03 
  * @Last Modified by: xin.song
- * @Last Modified time: 2018-07-20 17:51:43
+ * @Last Modified time: 2018-07-24 16:47:56
  */
 
 
@@ -29,33 +29,45 @@ let indexPage = {
         lastMsgTime: 1,
         thisMsgTime: 1,
         room: $("#roomid").text().trim("&nbsp;"),
+        userInfo: '', //用户数据集=
+        historyMsgGroup: '',
     },
     created: function () {
         let self = this;
 
-        
+
+
 
         socket.emit('join', {
             room: self.room,
-            public: true, //TODO:将来加上判断公共还是私有的房间
+            public: false,
         });
 
 
-        // let myname;
-        // let myavatar;
-        // self.baseTime = new Date().toLocaleString();
-        // if (myname != null && myavatar != null) {
-        //     console.log('用户已登录');
-        //     self.username = myname;
-        //     self.avatar = myavatar;
-        //     self.addName = false;
 
-        //     socket.emit('add user', {
-        //         username: myname,
-        //         avatar: myavatar
-        //     });
+        //检查数据
+        socket.emit('checkRoom');
+        socket.emit('checkUser');
+        socket.emit('checkTotalNum');
+        let data = sessionStorage.getItem('userInfo');
+        let lastTime = sessionStorage.getItem('userInfoAddTime');
+        let thisTime = Math.round(new Date().getTime() / 1000);
+        console.log(data, thisTime - lastTime);
+        // if (thisTime - lastTime > 60) {
+        //     console.log('session保存超过一小时，强制退出');
+        //     sessionStorage.clear();
+        //     TODO:这里以后要增加超时后跳转回页面让用户登录
+        //     return
         // }
+        if (data) {
+            self.addName = false;
+            self.userInfo = JSON.parse(data);
+            socket.emit("loadInfo", self.userInfo);
+
+        }
+
         self.lastMsgTime = Math.round(new Date().getTime() / 1000)
+
 
     },
     mounted: function () {
@@ -67,12 +79,13 @@ let indexPage = {
             let nowtime = new Date().toLocaleString();
             let time
             if (self.thisMsgTime - self.lastMsgTime > 60) {
+                self.lastMsgTime = self.thisMsgTime
                 time = '<div class="time-keepme">' + nowtime + '</div>'
             }
             $('#memo').append(time);
 
             let html
-            if (data.uname === self.username) {
+            if (data.uname === self.userInfo.username) {
                 html = '<div class="my-message-keepme"><div class="my-avatar"><img src="' + data.avatar + '" alt=""></div><div class="my-message-txt">' + data.msg + '</div></div>'
             } else {
                 html = '<div class="fri-message-keepme"><div class="fri-avatar"><img src="' + data.avatar + '" alt=""></div><div class="fri-message-group"><div class="fri-name">' + data.uname + '</div><div class="fri-message-txt">' + data.msg + '</div></div></div>'
@@ -126,6 +139,31 @@ let indexPage = {
             self.totalNum = num;
         });
 
+
+        //历史消息
+        socket.on('historyMsgRoom', function (data) {
+            console.log(data);
+            self.historyMsgGroup = data;
+        });
+
+        //更新sid
+        socket.on("updateSid", function (id) {
+            console.log(id);
+            self.userInfo.sid = id;
+            let userinfo = JSON.parse(sessionStorage.getItem("userInfo"));
+            userinfo.sid = id;
+            sessionStorage.setItem("userInfo", JSON.stringify(userinfo));
+            socket.emit("updateUserRoom", {
+                username: self.userInfo.username,
+                avatar: self.userInfo.avatar,
+                sid: id,
+                room: self.room
+            });
+        });
+
+
+
+
     },
     methods: {
         adduser() {
@@ -152,10 +190,31 @@ let indexPage = {
                 alert('请不要输入空消息');
                 return
             }
+            // let msg = {
+            //     room: self.room,
+            //     uname: self.userInfo.username,
+            //     avatar: self.userInfo.avatar,
+            //     sid: self.userInfo.sid,
+            //     uid: self.userInfo.uid,
+            //     msg: self.msg
+
+            // }
+            // let historyMsgGroup = self.historyMsgGroup
+            // historyMsgGroup.push(msg);
+            // if (historyMsgGroup.length > 3) {
+            //     historyMsgGroup.splice(0, historyMsgGroup.length - 3);
+            // }
+
+            // console.log(historyMsgGroup);
+            // socket.emit('postHistoryMsgRoom', {
+            //     Msg: historyMsgGroup
+            // });
             socket.emit('postMessageRoom', {
                 room: self.room,
-                uname: self.username,
-                avatar: self.avatar,
+                uname: self.userInfo.username,
+                avatar: self.userInfo.avatar,
+                sid: self.userInfo.sid,
+                uid: self.userInfo.uid,
                 msg: self.msg
             });
             $('#msg').val('');

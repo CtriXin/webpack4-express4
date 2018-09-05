@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ../includes/remHeader.html %>
+</head>
+
+
+
+<body>
+    <div id="vm">
+
+
+        <div class="header" v-if="isOldUser">
+            <h1>欢迎回来 {{userInfo.username}}</h1>
+        </div>
+        <div class="header" v-else>
+            <h1>你好 {{userInfo.username}}</h1>
+        </div>
+
+
+        <div class="adg-user-group" v-show="addNewUser">
+            <div class="add-users">
+                <div class="add-user-title">
+                    请登录/注册
+                </div>
+                <div class="add-users-group">
+                    <input id="add-user-input" />
+                </div>
+                <div class="add-avatar-title">
+                    请选择您的头像
+                </div>
+                <div class="avatar-group">
+                    <div class="avatar-item">
+                        <img src="../../img/avatar/avatar-1.jpg" @click="chooseAvatar(1,$event)" class="avatar-img" alt="">
+                        <img src="../../img/base/correct.png" v-show="selectAvatar == 1" class="correct-icon" alt="">
+                    </div>
+                    <div class="avatar-item">
+                        <img src="../../img/avatar/avatar-2.jpg" @click="chooseAvatar(2,$event)" class="avatar-img" alt="">
+                        <img src="../../img/base/correct.png" v-show="selectAvatar == 2" class="correct-icon" alt="">
+
+                    </div>
+                    <div class="avatar-item">
+                        <img src="../../img/avatar/avatar-3.jpg" @click="chooseAvatar(3,$event)" class="avatar-img" alt="">
+                        <img src="../../img/base/correct.png" v-show="selectAvatar == 3" class="correct-icon" alt="">
+
+                    </div>
+                    <div class="avatar-item">
+                        <img src="../../img/avatar/avatar-4.jpg" @click="chooseAvatar(4,$event)" class="avatar-img" alt="">
+                        <img src="../../img/base/correct.png" v-show="selectAvatar == 4" class="correct-icon" alt="">
+
+                    </div>
+                    <div class="avatar-item">
+                        <img src="../../img/avatar/avatar-5.jpg" @click="chooseAvatar(5,$event)" class="avatar-img" alt="">
+                        <img src="../../img/base/correct.png" v-show="selectAvatar == 5" class="correct-icon" alt="">
+
+                    </div>
+                </div>
+
+                <div class="add-user-btn" @click="adduser()">
+                    确定
+                </div>
+            </div>
+
+        </div>
+
+        <div class="shadow" v-show="addNewUser"></div>
+
+
+
+
+
+        <div class="live-user-group">
+            <div class="live-user-title">
+                当前在线人数： {{totalNum}}
+            </div>
+
+            <div class="live-user-item" v-for="(data,i) in  userList" v-if="data.username != userInfo.username">
+                <div class="live-user-avatar">
+                    <img :src="data.avatar" alt="">
+                </div>
+                <div class="live-user-name">
+                    {{data.username}}
+                </div>
+                <div class="live-user-btn" @click="chat(data.uid,data.username)">
+                    聊天 {{data.haveMsg}} {{data.room}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

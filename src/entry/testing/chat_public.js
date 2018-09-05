@@ -2,10 +2,8 @@
  * @Author: xin.song 
  * @Date: 2018-07-04 17:39:03 
  * @Last Modified by: xin.song
- * @Last Modified time: 2018-07-20 17:51:43
+ * @Last Modified time: 2018-08-29 18:43:12
  */
-
-
 // import axios from 'axios'
 
 import io from 'socket.io-client'
@@ -28,40 +26,37 @@ let indexPage = {
         baseTime: '',
         lastMsgTime: 1,
         thisMsgTime: 1,
-        room: $("#roomid").text().trim("&nbsp;"),
+        room: '',
+        roomlist: '',
     },
     created: function () {
         let self = this;
 
-        
-
-        socket.emit('join', {
-            room: self.room,
-            public: true, //TODO:将来加上判断公共还是私有的房间
-        });
+        socket.emit('checkRoom');
 
 
-        // let myname;
-        // let myavatar;
-        // self.baseTime = new Date().toLocaleString();
-        // if (myname != null && myavatar != null) {
-        //     console.log('用户已登录');
-        //     self.username = myname;
-        //     self.avatar = myavatar;
-        //     self.addName = false;
 
-        //     socket.emit('add user', {
-        //         username: myname,
-        //         avatar: myavatar
-        //     });
-        // }
+        let myname = sessionStorage.getItem('myname');
+        let myavatar = sessionStorage.getItem('myavatar');
+        self.baseTime = new Date().toLocaleString();
+        if (myname != null && myavatar != null) {
+            console.log('用户已登录');
+            self.myname = myname;
+            self.avatar = myavatar;
+            self.addName = false;
+
+            socket.emit('add user', {
+                username: myname,
+                avatar: myavatar
+            });
+        }
         self.lastMsgTime = Math.round(new Date().getTime() / 1000)
 
     },
     mounted: function () {
         let self = this;
         // 加入房间
-        socket.on('publishMessageRoom', function (data) {
+        socket.on('publish message', function (data) {
             self.thisMsgTime = Math.round(new Date().getTime() / 1000)
             console.log(self.thisMsgTime - self.lastMsgTime);
             let nowtime = new Date().toLocaleString();
@@ -72,7 +67,7 @@ let indexPage = {
             $('#memo').append(time);
 
             let html
-            if (data.uname === self.username) {
+            if (data.uname === self.myname) {
                 html = '<div class="my-message-keepme"><div class="my-avatar"><img src="' + data.avatar + '" alt=""></div><div class="my-message-txt">' + data.msg + '</div></div>'
             } else {
                 html = '<div class="fri-message-keepme"><div class="fri-avatar"><img src="' + data.avatar + '" alt=""></div><div class="fri-message-group"><div class="fri-name">' + data.uname + '</div><div class="fri-message-txt">' + data.msg + '</div></div></div>'
@@ -81,50 +76,56 @@ let indexPage = {
             window.scrollTo(0, document.body.scrollHeight)
         });
 
+        socket.on('username add', function (user) {
+            $('#memo').append($('<div class="memo-info">').text('用户 ' + user + ' 刚刚登陆'));
+        });
 
+        socket.on('count num', function (num) {
+            self.totalNum = num;
+        });
 
-        //登录成功
-        socket.on('loginSuccessRoom', function (data) {
-            self.username = data.username
-            self.avatar = data.avatar
-            self.addName = false;
-            sessionStorage.setItem('myname', data.username);
-            sessionStorage.setItem('myavatar', data.avatar);
-            sessionStorage.setItem('myroom', data.room);
-            return false;
+        socket.on('showRoom', function (data) {
+            self.roomlist = data;
         });
 
 
+        //登录成功
+        socket.on('loginSuccess', function (data) {
+            self.myname = data.username
+            self.addName = false;
+            sessionStorage.setItem('myname', data.username);
+            sessionStorage.setItem('myavatar', data.avatar);
+            return false;
+        });
+
+        //登录失败
+        socket.on('loginFail', function () {
+            alert('昵称重复')
+        });
 
         //又登陆了
-        socket.on('loginAgainRoom', function (user) {
+        socket.on('loginAgain', function (user) {
             $('#memo').append($('<div class="memo-info">').text('用户 ' + user + ' 又回来了'));
         });
 
         /*退出群聊提示*/
-        socket.on('leaveRoom', function (name) {
-            console.log(name, self.username);
-            if (name != null && name == self.username) {
+        socket.on('leave', function (name) {
+            console.log(name);
+            if (name != null) {
                 $('#memo').append($('<div class="memo-info">').text('用户 ' + name + ' 已退出'));
                 $('.avatar-img').removeClass('avatar-img-keepme');
                 $('.correct-icon').hide();
                 self.addName = true
-            } else {
-                $('#memo').append($('<div class="memo-info">').text('用户 ' + name + ' 已退出'));
             }
         })
 
 
-        // 登录成功
-        socket.on('signSuccessRoom', function (user) {
-            $('#memo').append($('<div class="memo-info">').text('用户 ' + user + ' 进入房间了'));
+        // 监听房间消息
+        socket.on('roomMsg', function (msg, room) {
+            console.log('hahaha');
+            $('#memo').append($('<div class="memo-info">').text(msg + room));
         });
 
-
-        //计数
-        socket.on('countNumRoom', function (num) {
-            self.totalNum = num;
-        });
 
     },
     methods: {
@@ -132,11 +133,17 @@ let indexPage = {
             let self = this;
             self.username = $.trim($('#add-user-input').val());
             console.log(self.username, self.avatar);
-            if (self.username && self.avatar != "") {
-                socket.emit('newUserRoom', {
+            if (self.room) {
+                console.log('加入房间');
+                socket.emit('join', {
                     username: self.username,
-                    avatar: self.avatar,
                     room: self.room
+                });
+            }
+            if (self.username && self.avatar != "") {
+                socket.emit('add user', {
+                    username: self.username,
+                    avatar: self.avatar
                 });
                 $('#add-user-input').val('');
 
@@ -152,9 +159,8 @@ let indexPage = {
                 alert('请不要输入空消息');
                 return
             }
-            socket.emit('postMessageRoom', {
-                room: self.room,
-                uname: self.username,
+            socket.emit('post message', {
+                uname: self.myname,
                 avatar: self.avatar,
                 msg: self.msg
             });
@@ -172,15 +178,18 @@ let indexPage = {
             self.selectAvatar = num;
         },
         logout() {
-            console.log('hahaha');
             let self = this;
             sessionStorage.clear();
-            socket.emit('logoutRoom', {
-                username: self.username,
-                room: self.room
-            });
+            socket.emit('logout', self.myname);
         },
-
+        join(roomname, event) {
+            let self = this;
+            self.room = roomname;
+            let el = event.target;
+            $('.room-item').removeClass('room-item-select-keepme');
+            $(el).addClass('room-item-select-keepme');
+            window.location.href = '/test/chat/' + roomname;
+        }
         //FIXME: END HERE
     }
 };
@@ -205,5 +214,41 @@ $(() => {
             VM.adduser()
         }
     })
+
+    // var socket = io(); 
+
+    // $('.msg').submit(function () {
+    //     socket.emit('chat message', $('#msg').val());
+    //     $('#msg').val('');
+    //     return false;
+    // });
+    // socket.on('chat message', function (msg) {
+    //     $('#messages').append($('<li>').text(msg));
+    // });
+
+    // $('.username').submit(function () {
+    //     socket.emit('add user', {
+    //         username: $('#uname').val()
+    //     }, function (data) {
+    //         console.log(data);
+    //     });
+
+
+    //     // socket.emit('add user', $('#uname').val(), function (data) {
+    //     //     if (data) {
+    //     //         $('#nickWrap').hide();
+    //     //         $('#contentWrap').show();
+    //     //     } else {
+    //     //         $('#nickError').html('That username is already taken!  Try again.');
+    //     //     }
+    //     // });
+
+    //     $('#uname').val('');
+    //     return false;
+    // });
+    // socket.on('username add', function (user) {
+    //     $('#messages').append($('<li>').text('用户 ' + user + ' 刚刚登陆'));
+    // });
+
 
 });

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ../includes/vwHeader.html %>
+</head>
+
+<body>
+    <div class="lds-css" id="loader">
+        <div class="lds-facebook" style="width: 10vw !important;height: 15vw !important">
+            <div style="background: #5707ff"></div>
+            <div style="background: #ac04b9"></div>
+            <div style="background: #ff0075"></div>
+        </div>
+    </div>
+    <div id="vm">
+
+        <div class="left-friend-group">
+            <div class="left-title" v-show="showFriendList">
+                <div class="left-title-txt">
+                    好友列表
+                </div>
+            </div>
+            <div class="left-title" v-show="showSessionList">
+                <div class="go-back-keepme" @click="gotoFriend">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44">
+                        <path fill="#FFF" fill-rule="evenodd" d="M17.828 21.9l7.779 7.778a1 1 0 1 1-1.415 1.414l-8.485-8.485a1 1 0 0 1 0-1.415l8.485-8.485a1 1 0 1 1 1.415 1.414L17.828 21.9z"
+                        />
+                    </svg>
+                </div>
+                <div class="left-title-txt">
+                    会话列表
+                </div>
+            </div>
+            <transition name="friend-fade">
+                <div class="friend-row" v-show="showFriendList">
+                    <div class="session-default-item" @click="gotoSession">
+                        <div class="session-defaul-avatar">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAS1BMVEVMaXEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxVY0NAAAAGXRSTlMA8gyyh9S+6QUVRR+SWyvdpHf+NTvGZE9pfE6gewAAAO5JREFUeNrt0MluxCAQBNBibTBesMHL/39pNJpDlJiyM8rV7waoulrg8fi3ar2oRVzeIv4iHJOzXQqI45ZVHnGrOFO/T3oWG3Btkx0/RLNGXJmndL5zEdzeSAB2DWCiVLQYC6bv2ajEShRb2rKaI4MYBW1mADON9J7JZJrSePMuoJeEQXV4szOalvBxRCKY/kCT70DQJ2tBaKXRVCYQmwGxkq8Mjq5cp3b/bED1JuCsSgIVfD5niuy4oP1ph0PtuBSWXxXGFdx4RfYS8BIHL7PGfWT0zim3+lUkDxr3ll42QI9dVxNOSCTiQwWPB/cFtbYIVEFj5mcAAAAASUVORK5CYII="
+                                alt="">
+                            <div class="unread-num" v-show="totalUnread>0">
+                                {{totalUnread}}
+                            </div>
+                        </div>
+                        <div class="session-msg-group">
+                            <div class="session-title">
+                                <span v-show="lastSessionName!=''">新的</span>会话消息
+                            </div>
+                            <div class="session-from" v-show="lastSessionName!=''">
+                                来自{{lastSessionName}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="friend-list">
+                        <div class="friend-item" :class="'friend-item-' + data.account" v-for="(data,i) in friends" @click="chatFriend(data.account,data)"
+                            v-if="data.online">
+                            <div class="index">
+                                {{i+1}}
+                            </div>
+                            <div class="avatar">
+                                <div class="unread-count" v-show="data.unread>0">
+                                    {{data.unread}}
+                                </div>
+                                <img :src="data.avatar" :class="data.online?'':'offline'" alt="">
+                            </div>
+                            <div class="friend-info">
+                                <div class="name">
+                                    <div class="name-txt">
+                                        {{data.account}}
+                                    </div>
+                                    <div class="offline" v-show="!data.online">
+                                        [离线]
+                                    </div>
+                                    <div class="online" v-show="data.online">
+                                        [在线]
+                                    </div>
+                                </div>
+                                <div class="friend-chat" v-show="data.lastMsg != ''">
+                                    <div class="chat-txt" v-if="data.lastMsg.flow == 'out'">
+                                        你:{{data.lastMsg.text}}
+                                    </div>
+                                    <div class="chat-txt" v-else>
+                                        {{data.lastMsg.text}}
+                                    </div>
+                                </div>
+                                <div class="friend-status" v-show="data.lastMsg != ''">
+                                    <div class="time">
+                                        {{timeTrans(data.lastMsg.time)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="offline-session-item">
+                            ---- 下面用户已经离线 ----
+                        </div>
+
+                        <div class="friend-item" :class="'friend-item-' + data.account" v-for="(data,j) in friends" @click="chatFriend(data.account,data)"
+                            v-if="!data.online">
+                            <div class="index">
+                                {{j+1}}
+                            </div>
+                            <div class="avatar">
+                                <img :src="data.avatar" :class="data.online?'':'offline'" alt="">
+                            </div>
+                            <div class="friend-info">
+                                <div class="name">
+                                    <div class="name-txt">
+                                        {{data.account}}
+                                    </div>
+                                    <div class="offline" v-show="!data.online">
+                                        [离线]
+                                    </div>
+                                    <div class="online" v-show="data.online">
+                                        [在线]
+                                    </div>
+                                </div>
+                                <div class="friend-chat" v-show="data.lastMsg != ''">
+                                    <div class="chat-txt" v-if="data.lastMsg.flow == 'out'">
+                                        你:{{data.lastMsg.text}}
+                                    </div>
+                                    <div class="chat-txt" v-else>
+                                        {{data.lastMsg.text}}
+                                    </div>
+                                </div>
+                                <div class="friend-status" v-show="data.lastMsg != ''">
+                                    <div class="time">
+                                        {{timeTrans(data.lastMsg.time)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+            <transition name="session-fade">
+                <div class="session-row" v-show="showSessionList">
+                    <div class="session-list">
+                        <div class="session-item" :class="'session-item-' + data.to" v-for="(data,i) in sessions" @click="goChat(data.to,data,$event)"
+                            v-if="data.online">
+                            <div class="index">
+                                {{i+1}}
+                            </div>
+                            <div class="avatar">
+                                <div class="unread-count" v-show="data.unread>0">
+                                    {{data.unread}}
+                                </div>
+                                <img :src="data.avatar" class="online" alt="">
+                            </div>
+                            <div class="session-info">
+                                <div class="session-info-group">
+                                    <div class="name online">
+                                        {{data.to}}
+                                    </div>
+                                    <div class="time online">
+                                        {{dateTrans(data.updateTime)}}
+                                    </div>
+                                </div>
+                                <div class="session-msg-group">
+                                    <div class="last-msg offline" v-if="data.lastMsg.type == 'text'">
+                                        {{data.lastMsg.text}}
+                                    </div>
+                                    <div class="last-msg offline" v-else-if="data.lastMsg.type == 'audio'">
+                                        音频，请去手机收听
+                                    </div>
+                                    <div class="last-msg offline" v-else>
+                                        不支持类型，请去手机查看
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="offline-session-item">
+                            ---- 下面用户已经离线 ----
+                        </div>
+                        <div class="session-item" :class="'session-item-' + data.to" v-for="(data,j) in sessions" @click="goChat(data.to,data,$event)"
+                            v-if="!data.online">
+                            <div class="index">
+                                {{j+1}}
+                            </div>
+                            <div class="avatar">
+                                <div class="unread-count" v-show="data.unread>0">
+                                    {{data.unread}}
+                                </div>
+                                <img :src="data.avatar" class="offline" alt="">
+                            </div>
+                            <div class="session-info">
+                                <div class="session-info-group">
+                                    <div class="name offline">
+                                        {{data.to}}
+                                    </div>
+                                    <div class="time offline">
+                                        {{dateTrans(data.updateTime)}}
+                                    </div>
+                                </div>
+                                <div class="session-msg-group">
+                                    <div class="last-msg offline" v-if="data.lastMsg.type == 'text'">
+                                        {{data.lastMsg.text}}
+                                    </div>
+                                    <div class="last-msg offline" v-else-if="data.lastMsg.type == 'audio'">
+                                        音频，请去手机收听
+                                    </div>
+                                    <div class="last-msg offline" v-else>
+                                        不支持类型，请去手机查看
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </transition>
+        </div>
+
+
+        <div class="right-chat-group">
+
+            <div class="change-dom" v-if="changeDom" style="display: none;">我的存在只是为了dom更新</div>
+
+            <div class="right-title">
+                <div class="chat-group" v-show="chatInfo.to">
+                    <div class="chat-name">
+                        {{chatInfo.to}}
+                    </div>
+                    <div class="chat-online-status online" v-if="chatInfo.online">
+                        [在线]
+                    </div>
+                    <div class="chat-online-status" v-else>
+                        [离线]
+                    </div>
+                </div>
+                <div class="hello-group">
+                    <div class="my-name">
+                        你好，{{myInfo.nick}}
+                    </div>
+                    <div class="logout" @click="logout">
+                        退出
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="message-container" id="message-container" v-show="toUser!=''">
+                <!-- :style="'height:' + messageHeight + 'px'" -->
+                <div class="chat-memo" v-if="JSON.stringify(historyMsgGroup[toUserSessionid]) != '[]'">
+                    ---- 历史消息 ----
+                </div>
+
+                <div class="chat-row" v-for="(data,i) in historyMsgGroup[toUserSessionid]">
+                    <div class="chat-time" v-if="i==0">
+                        {{timeTrans(data.time)}}
+                    </div>
+                    <div class="chat-time" v-else v-show=" historyMsgGroup[toUserSessionid][i-1].time - data.time > 6000">
+                        {{timeTrans(data.time)}}
+                    </div>
+                    <div class="chat-item" :class="data.flow == 'out'?'out':'in'">
+                        <div class="avatar" v-if="data.flow == 'out'">
+                            <img :src="myInfo.avatar" alt="">
+                        </div>
+                        <div class="avatar" v-else>
+                            <img :src="chatInfo.avatar" alt="">
+                        </div>
+
+                        <div class="msg-detail" v-if="data.type == 'image'">
+                            <img :src="data.file.url" class="msg-detail-img-keepme" alt="">
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'text'">
+                            {{data.text}}
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'custom'">
+                            当前不支持此类型消息 -- 礼物
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'audio'">
+                            当前不支持此类型消息 -- 音频
+                            <a :href="data.file.mp3Url" target="_blank">点击</a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="chat-row" v-for="(data,i) in offlineMsgGroup[toUserSessionid]">
+                    <div class="chat-time">
+                        {{timeTrans(data.time)}}
+                    </div>
+
+                    <div class="chat-item" :class="data.flow == 'out'?'out':'in'">
+                        <div class="avatar" v-if="data.flow == 'out'">
+                            <img :src="myInfo.avatar" alt="">
+                        </div>
+                        <div class="avatar" v-else>
+                            <img :src="chatInfo.avatar" alt="">
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'image'">
+                            <img :src="data.file.url" class="msg-detail-img-keepme" alt="">
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'text'">
+                            {{data.text}}
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'custom'">
+                            当前不支持此类型消息 -- 礼物
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'audio'">
+                            当前不支持此类型消息 -- 音频
+                            <a :href="data.file.mp3Url" target="_blank">点击</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-row" v-for="(data,i) in msgGroup[toUserSessionid]">
+                    <div class="chat-time" v-if="i==0">
+                        {{timeTrans(data.time)}}
+                    </div>
+                    <div class="chat-time" v-else v-show="data.time - msgGroup[toUserSessionid][i-1].time> 6000">
+                        {{timeTrans(data.time)}}
+                    </div>
+                    <div class="chat-item" :class="data.flow == 'out'?'out':'in'">
+                        <div class="avatar" v-if="data.flow == 'out'">
+                            <img :src="myInfo.avatar" alt="">
+                        </div>
+                        <div class="avatar" v-else>
+                            <img :src="chatInfo.avatar" alt="">
+                        </div>
+
+                        <div class="msg-detail" v-if="data.type == 'image'">
+                            <img :src="data.file.url" class="msg-detail-img-keepme" alt="">
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'text'">
+                            {{data.text}}
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'custom'">
+                            当前不支持此类型消息 -- 礼物
+                        </div>
+                        <div class="msg-detail" v-if="data.type == 'audio'">
+                            当前不支持此类型消息 -- 音频
+                            <a :href="data.file.mp3Url" target="_blank">点击</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="memo" v-show="toUser==''">
+                yo，你来啦~ 选择你想要聊天的用户吧~~
+            </div>
+
+
+
+            <div class="emoji-group" v-show="showEmoji">
+                <div v-for="(data,i) in emojiGroup" @click="goEmoji(data)">
+                    {{data}}
+                </div>
+            </div>
+
+
+
+            <div class="send-group" v-show="toUser!=''">
+                <input type="text" class="input-style" ref="input" v-model="sendInput" placeholder="输入消息...回车发送">
+                <div class="emoji-btn" @click="showEmojiFun">
+                    😀
+                </div>
+                <div class="send-btn" @click="sendMsg()">发送</div>
+            </div>
+
+
+        </div>
+
+
+        <div class="toast" v-show="showtoast">
+            {{toasttxt}}
+        </div>
+
+        <div class="notification right" v-show="showNoti">
+            <div class="notification-group">
+                <h2 class="notification-title">提示</h2>
+                <div class="notification-content">
+                    <p>{{notificationTxt}}</p>
+                </div>
+                <div class="notification-closeBtn" @click="closeNoti">X</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
