@@ -1,0 +1,71 @@
+.grpc-btn {
+    width: 115px;
+    width: max-content;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    background: gray
+}
+
+.data-show {
+    margin-top: 20px;
+}
+
+.msg {
+    input {
+        padding: 10px;
+        width: 50%;
+        margin-right: .5%;
+        border: 1px solid gray;
+    }
+    button {
+        width: 15%;
+        background: rgb(130, 224, 255);
+        border: none;
+        padding: 10px;
+    }
+}
+
+.msg {
+    input {
+        padding: 10px;
+        width: 50%;
+        margin-right: .5%;
+        border: 1px solid gray;
+    }
+    button {
+        width: 15%;
+        background: rgb(130, 224, 255);
+        border: none;
+        padding: 10px;
+    }
+}
+
+#messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#messages li {
+    padding: 5px 10px;
+}
+
+#messages li:nth-child(odd) {
+    background: #eee;
+}
+
+.call-keepme {
+    width: max-content;
+    padding: 0 10px;
+    background: #cccccc;
+    color: #ffffff;
+    margin: 0 auto 10px;
+    cursor: pointer;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+}
