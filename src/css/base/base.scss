@@ -1,3 +1,13 @@
+$border-1: #64e6bc;
+$border-2: #80D7FF;
+$border-3: #70b4f0;
+$border-4: #8A95FF;
+$border-5: #EB98FF;
+$border-6: #FF82DC;
+$border-7: #FD809B;
+$border-8: #FEC56E;
+$border-9: #FFD773;
+$border-10: #E1C275;
 @mixin border-radius($radius) {
     -webkit-border-radius: $radius;
     border-radius: $radius;
@@ -43,17 +53,38 @@
     width: 100% - $substract;
 }
 
-%singleline-ellipsis {
+$vw_fontsize: 37.5;
+$rem_fontsize: 375;
+@mixin vw-text-center($height) {
+    height: ($height / $vw_fontsize)* 1rem;
+    line-height: ($height / $vw_fontsize)* 1rem;
+}
+
+@mixin rem-text-center($height) {
+    height: $height / $rem_fontsize * 10;
+    line-height: $height / $rem_fontsize * 10;
+}
+
+.ellipsis {
     @include singleline-ellipsis;
 }
 
 @function rem($px) {
-    $remSize: $px / 375 *10;
+    $remSize: $px / $rem_fontsize * 10;
     @return #{$remSize}rem
 }
 
 html {
     touch-action: manipulation;
+}
+
+html,
+body,
+div,
+span,
+canvas {
+    margin: 0;
+    padding: 0;
 }
 
 .text-right {
