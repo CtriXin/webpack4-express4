@@ -1,0 +1,382 @@
+@import "base/base.scss";
+$vw_fontsize: 128; // iPhone 6尺寸的根元素大小基准值
+// 根元素大小使用 vw 单位
+$vw_design: 1280;
+@function vw($px) {
+    @return ($px / $vw_design) * 100vw;
+}
+
+html,
+body,
+div,
+span,
+canvas {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: ($vw_fontsize / ($vw_design)) * 100vw; //就是相当于20vw
+}
+
+body {
+    font-size: vw(12);
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    background: #212338;
+    -webkit-user-select: none;
+    /* 禁止选择 */
+    -webkit-touch-callout: none;
+    /* 禁用弹出 */
+}
+
+#vm {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+}
+
+.user-choose {
+    position: absolute;
+    top: vw(20);
+    width: 25vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    .user-1 {
+        width: vw(100);
+        height: vw(40);
+        line-height: vw(40);
+        color: rgb(39, 39, 39);
+        background: #ffffff;
+        text-align: center;
+        margin: 0 vw(8);
+        border-radius: vw(4);
+    }
+}
+
+.left-list {
+    height: 70vh;
+    width: 25vw;
+    background: #fff;
+    border-radius: vw(4);
+    color: #464646;
+    margin-left: 10vw;
+    padding-top: vw(8);
+}
+
+.left-select-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+    align-content: stretch;
+    margin-bottom: vw(5);
+    .left-select-item {
+        width: vw(65);
+        height: vw(25);
+        line-height: vw(25);
+        text-align: center;
+        background: #ccc;
+        border-radius: vw(4);
+        color: #0d2e2e;
+    }
+}
+
+
+.session-item,
+.friend-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    padding: 0 vw(10);
+    margin-bottom: vw(8);
+    margin-bottom: vw(4);
+    .right-group {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: stretch;
+        align-content: stretch;
+        width: vw(240);
+    }
+    .avatar {
+        width: vw(45);
+        position: relative;
+        .unread-count {
+            position: absolute;
+            width: vw(20);
+            background: red;
+            color: #fff;
+            height: vw(20);
+            border-radius: 50%;
+            text-align: center;
+            line-height: vw(20);
+            right: 0;
+            top: vw(5);
+            z-index: 99;
+        }
+        img {
+            width: 100%;
+            display: block;
+            border-radius: 50%;
+            &.offline {
+                -webkit-filter: grayscale(100%);
+                -moz-filter: grayscale(100%);
+                -ms-filter: grayscale(100%);
+                -o-filter: grayscale(100%);
+                filter: grayscale(100%);
+            }
+        }
+    }
+    .userinfo {
+        width: vw(280);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+        align-content: stretch;
+        .name {
+            font-size: vw(14);
+        }
+    }
+    .session-msg-group {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        align-content: stretch;
+        .online-stuts {
+            margin-right: vw(5);
+        }
+        .last-msg {
+            width: vw(135);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+    .time {
+        color: #ccc;
+        font-size: vw(10);
+    }
+}
+
+.hello-group {
+    position: absolute;
+    width: vw(250);
+    right: vw(20);
+    top: vw(20);
+    display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-end;
+	align-items: center;
+    align-content: stretch;
+    .name{
+        font-size: vw(13);
+        margin-right: vw(4);
+        color: #fff;
+    }
+    .logout {
+        background: #00aeff;
+        height: vw(25);
+        line-height: vw(25);
+        padding: 0 vw(15);
+        text-align: center;
+        color: #fff;
+        border-radius: vw(4);
+    }
+}
+
+.toast {
+    position: fixed;
+    padding: vw(20);
+    background: black;
+    color: #fff;
+    font-size: vw(16);
+    border-radius: vw(5);
+    top: 50%;
+    left: 50%;
+    width: vw(200);
+    text-align: center;
+    margin-left: vw(-100);
+}
+
+.offline-session-item {
+    text-align: center;
+    margin: vw(7) auto;
+}
+
+.friend-item {
+    justify-content: flex-start;
+    .userinfo {
+        margin-left: vw(5);
+        width: vw(85);
+        font-size: vw(14);
+    }
+    .time {
+        color: #ccc;
+        font-size: vw(10);
+    }
+}
+
+.message-group {
+    height: 70vh;
+    width: 50vw;
+    padding-top: vw(10);
+    background: #fff;
+    margin-right: 10vw;
+    border-radius: vw(4);
+    position: relative;
+    overflow: hidden;
+}
+
+.send-group {
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    background: #d3d3d3;
+    padding: vw(10) 0;
+}
+
+.memo {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    font-size: vw(13);
+    color: #8b8b8b;
+    text-align: center;
+    width: 100%;
+}
+
+input {
+    border: vw(1) solid #fff;
+    padding: 0;
+    padding: 0 vw(10);
+    line-height: vw(40);
+    height: vw(40);
+    font-size: vw(16);
+    color: #212338;
+    width: 40vw;
+    margin-left: 1vw;
+    &::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #dadae3;
+        opacity: 1;
+        /* Firefox */
+    }
+    &:-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        color: #dadae3;
+    }
+    &::-ms-input-placeholder {
+        /* Microsoft Edge */
+        color: #dadae3;
+    }
+}
+
+.send-msg {
+    width: 5vw;
+    border-radius: vw(4);
+    text-align: center;
+    background: rgb(59, 172, 247);
+    color: rgb(255, 255, 255);
+    margin: 0 auto;
+    line-height: vw(40);
+    height: vw(40);
+}
+
+.msg-detail-img-keepme {
+    width: 100%;
+    display: block;
+}
+
+.message-container {
+    height: 60vh;
+    overflow: auto; // padding-bottom: vw(30);
+}
+
+.chat-row {
+    padding: vw(20) vw(10) 0;
+    margin-bottom: vw(15);
+}
+
+.chat-time {
+    text-align: center;
+    font-size: vw(11);
+    color: #8b8b8b;
+    margin-bottom: vw(20);
+}
+
+.chat-online-keepme {
+    margin: vw(8) auto;
+    text-align: center;
+}
+
+.chat-memo {
+    margin: vw(10) auto;
+    text-align: center;
+}
+
+.chat-item {
+    .avatar {
+        width: vw(40);
+        img {
+            display: block;
+            width: 100%;
+            border-radius: 50%;
+        }
+    }
+    .msg-detail {
+        max-width: vw(320);
+        color: #252525;
+        background: #eaeeef;
+        border-color: #eee;
+        -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.06);
+        -moz-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.06);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.06);
+        padding: vw(10) vw(15);
+        margin: 0 vw(10); // text-align: right;
+        word-wrap: break-word;
+    }
+    &.out {
+        display: flex;
+        flex-direction: row-reverse;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        align-content: stretch;
+    }
+    &.in {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        align-content: stretch;
+    }
+}
