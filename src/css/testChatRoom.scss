@@ -1,0 +1,317 @@
+@import "base/base.scss";
+body {
+    font-size: rem(12);
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    padding: 0 rem(10);
+    .logout {
+        width: rem(50);
+        background: rgb(130, 224, 255);
+        text-align: center;
+        height: rem(25);
+        line-height: rem(25);
+        color: white; // z-index: 99;
+    }
+}
+
+.total-num {
+    padding: 0 rem(10);
+}
+
+.shadow {
+    position: fixed;
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    z-index: 9;
+    background: black;
+}
+
+.adg-user-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    position: fixed;
+}
+
+.avatar-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    margin: rem(10) 0;
+    .avatar-item {
+        width: rem(50);
+        position: relative;
+        img {
+            width: 100%;
+            display: block;
+        }
+        .avatar-img-keepme {
+            opacity: .7;
+        }
+        .correct-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: rem(19);
+        }
+        .select-shadow {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.25);
+            top: 0;
+            left: 0;
+        }
+    }
+}
+
+.add-users {
+    z-index: 10;
+    width: 80%;
+    .add-user-title {
+        color: #fff;
+        font-size: rem(16);
+        margin-bottom: rem(8);
+    }
+    .add-avatar-title {
+        color: #fff;
+        font-size: rem(16);
+        margin: rem(8) 0;
+    }
+    .add-users-group {
+        display: flex;
+        align-items: center;
+        input {
+            padding: 0 rem(10);
+            width: 58%;
+            height: rem(30);
+            margin-right: .5%;
+            font-size: rem(12);
+            border: 1px solid #fff;
+        }
+    }
+}
+
+.live-user-title {
+    padding: 0 rem(10)
+}
+
+.live-user-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    padding: rem(10);
+    margin: rem(8) auto;
+    background: rgba(0, 0, 0, 0.04);
+    .live-user-avatar {
+        width: rem(60);
+        height: rem(60);
+        img {
+            display: block;
+            width: 100%;
+            border-radius: 50%;
+        }
+    }
+    .live-user-name {
+        width: rem(205);
+        font-size: rem(14);
+    }
+    .live-user-btn {
+        width: rem(80);
+        height: rem(30);
+        background: #70d970;
+        border-radius: rem(8);
+        text-align: center;
+        color: white;
+        line-height: rem(30);
+        font-size: rem(13);
+    }
+}
+
+.room-group {
+    margin: rem(5) 0;
+    display: flex;
+    justify-content: flex-start;
+    .room-item {
+        background: #eee;
+        color: black;
+        padding: rem(5);
+        margin-right: rem(3);
+        text-align: center;
+        &.room-item-select-keepme {
+            background: #0db2ff;
+            color: white;
+        }
+    }
+}
+
+.add-user-btn {
+    background: #0db2ff;
+    width: rem(30);
+    color: white;
+    height: rem(30);
+    width: rem(50);
+    text-align: center;
+    line-height: rem(30);
+}
+
+.msg {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    background: gray;
+    height: rem(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    input {
+        padding: rem(10);
+        width: 77%;
+        margin-right: .5%;
+        border: rem(1) solid gray;
+        font-size: rem(12);
+    }
+    .msg-btn {
+        width: 15%;
+        background: rgb(130, 224, 255);
+        border: none;
+        text-align: center;
+        font-weight: 600;
+        padding: rem(10);
+    }
+}
+
+#messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#messages li {
+    padding: rem(5) rem(10);
+}
+
+#messages li:nth-child(odd) {
+    background: #eee;
+}
+
+#memo {
+    margin-bottom: rem(80);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .time-keepme {
+        text-align: center;
+        color: #000;
+        padding: rem(5);
+        font-size: rem(10);
+        margin-bottom: rem(7);
+        border-radius: rem(4);
+    }
+    .memo-info {
+        background: #cbcaca;
+        color: white;
+        text-align: center;
+        padding: rem(5) rem(20);
+        margin-bottom: rem(7);
+        border-radius: rem(4);
+    }
+}
+
+/*聊天界面*/
+
+.my-message-keepme {
+    display: flex;
+    flex-direction: row-reverse;
+    /* flex-wrap: wrap-reverse; */
+    justify-content: flex-start;
+    align-items: center;
+    align-content: stretch;
+    width: rem(350);
+    margin-left: rem(25);
+    margin-bottom: rem(20);
+    .my-avatar {
+        width: rem(40);
+        height: rem(40);
+        background: red;
+        border-radius: 50%;
+        margin-right: rem(20);
+        margin-left: rem(20);
+        img {
+            width: 100%;
+            display: block;
+            border-radius: 50%;
+        }
+    }
+    .my-message-txt {
+        max-width: rem(250);
+        word-wrap: break-word;
+    }
+}
+
+.fri-message-keepme {
+    display: flex;
+    margin-right: rem(25);
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: stretch;
+    width: rem(350);
+    margin-bottom: rem(20);
+    .fri-avatar {
+        width: rem(40);
+        height: rem(40);
+        background: yellow;
+        border-radius: 50%;
+        margin-right: rem(20);
+        margin-left: rem(20);
+        img {
+            width: 100%;
+            display: block;
+            border-radius: 50%;
+        }
+    }
+    .fri-message-group {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: flex-start;
+        align-content: stretch;
+        width: rem(250);
+        .fri-name {
+            font-size: rem(11);
+        }
+        .fri-message-txt {
+            font-size: rem(14);
+            margin-top: rem(2);
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+    }
+}
