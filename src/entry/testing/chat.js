@@ -2,9 +2,9 @@
  * @Author: xin.song 
  * @Date: 2018-07-04 17:39:03 
  * @Last Modified by: xin.song
- * @Last Modified time: 2018-07-23 15:21:28
+ * @Last Modified time: 2018-07-23 16:43:49
  */
-import Vue from 'vue';
+
 
 // import axios from 'axios'
 
@@ -29,7 +29,7 @@ let indexPage = {
         lastMsgTime: 1,
         thisMsgTime: 1,
         room: '',
-        roomlist:'',
+        roomlist: '',
         userList: '',
     },
     created: function () {
@@ -44,7 +44,7 @@ let indexPage = {
 
 
 
-        
+
         self.lastMsgTime = Math.round(new Date().getTime() / 1000)
 
     },
@@ -57,7 +57,7 @@ let indexPage = {
 
         //显示在线用户
         socket.on('showUser', function (data) {
-            console.log('用户信息',data);
+            console.log('用户信息', data);
             self.userList = data;
             console.log(self.userList);
         });
@@ -131,6 +131,9 @@ let indexPage = {
             $('.room-item').removeClass('room-item-select-keepme');
             $(el).addClass('room-item-select-keepme');
             window.location.href = '/test/chat/' + roomname;
+        },
+        gouser(id) {
+            let self = this;
         }
         //FIXME: END HERE
     }
